@@ -4,10 +4,29 @@ type FormValues = {
   username: string;
   email: string;
   channel: string;
+  social: {
+    twitter: string;
+    facebook: string;
+  };
+  phoneNumbers: string[];
 };
 
 const FormHandel = () => {
-  const form = useForm<FormValues>();
+  // now add bydefault data in formhook
+  // bydefault useform() accept an object
+
+  const form = useForm<FormValues>({
+    defaultValues: {
+      username: "Usman",
+      email: "",
+      channel: "",
+      social: {
+        twitter: "",
+        facebook: "",
+      },
+      phoneNumbers: ["", ""],
+    },
+  });
   const { register, control, handleSubmit, formState } = form;
   const { errors } = formState;
   //   register is a method that can be accessed by form
@@ -93,6 +112,81 @@ const FormHandel = () => {
 
           <p className="error">{errors.channel?.message}</p>
         </div>
+
+        {/* add nested objects in corresponding object
+        this process supperpose in three stages
+          add the type of data as object
+          then add it in the default value as object
+        now we will collect data of user twitter profile
+            for this we will add an input field for twitter
+            also we will declare it in the form values as object
+        */}
+
+        <div className="form-control">
+          <label htmlFor="twitter">Twitter</label>
+          <input
+            type="text"
+            id="twitter"
+            {...register("social.twitter", {
+              required: {
+                value: true,
+                message: "Enter the twitter profile",
+              },
+            })}
+          />
+          <p className="error">{errors.social?.twitter?.message}</p>
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="facebook">Faceboook</label>
+          <input
+            type="text"
+            id="facebook"
+            {...register("social.facebook", {
+              required: {
+                value: true,
+                message: "Enter the facebook profile",
+              },
+            })}
+          />
+          <p className="error">{errors.social?.facebook?.message}</p>
+        </div>
+
+        {/* now we have to add user phone number primary and secondary
+        this process will be done in three steps 
+        1st add the array in type form
+        second add the array in default value
+        then write the jsx for phone number */}
+
+        <div className="form-control">
+          <label htmlFor="primary-phoneNumber">Primary Number</label>
+          <input
+            type="text"
+            id="primary-phonenumber"
+            {...register("phoneNumbers.0", {
+              required: {
+                value: true,
+                message: "Enter the primary phone number",
+              },
+            })}
+          />
+          <p className="error">{errors.phoneNumbers?.message}</p>
+        </div>
+
+        <div className="form-control">
+          <label htmlFor="secondary-phoneNumber">secondary Number</label>
+          <input
+            type="text"
+            id="secondary-phonenumber"
+            {...register("phoneNumbers.1", {
+              required: {
+                value: true,
+                message: "Enter the secondary phone number",
+              },
+            })}
+          />
+        </div>
+        <p className="error">{errors.phoneNumbers?.message}</p>
 
         <button type="submit">submit</button>
       </form>
