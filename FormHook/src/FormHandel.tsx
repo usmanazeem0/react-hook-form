@@ -1,4 +1,5 @@
 import { useForm, useFieldArray } from "react-hook-form";
+import { useEffect } from "react";
 import { DevTool } from "@hookform/devtools";
 type FormValues = {
   username: string;
@@ -35,13 +36,14 @@ const FormHandel = () => {
       dob: new Date(),
     },
   });
-  const { register, control, handleSubmit, formState } = form;
+  const { register, control, handleSubmit, watch, formState } = form;
   const { errors } = formState;
   // hereappend in a function that useFieldArray offers
   const { fields, append, remove } = useFieldArray({
     name: "phNumbers",
     control,
   });
+
   //   register is a method that can be accessed by form
 
   // after using it in the field {...register} now track the progress
@@ -63,8 +65,29 @@ const FormHandel = () => {
 
   //   last step is to define the datatype of data parameter
 
+  // add the watch method to be observe and add the fieldname as argument
+  // ofcourse if you want to observe more than one field than add an array in watch() method
+
+  const wacthUserName = watch(["username", "email"]);
+
+  // if you don't mention any field the whole form will be observed
+  // const watchForm = watch();
+  // <h2>watch whole form {JSON.stringify(watchForm)}</h2>
+
+  // if you want to see without updating page changes of watch() method then import useEffect form react
+  // add function useEffect and then in function use match(value) method which will take value as parameterr and clg it in the browser to see the efects
+  // also return the clean function
+  // then add the dependencies of [watch]
+  useEffect(() => {
+    const subscription = watch((value) => {
+      console.log(value);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch]);
+
   return (
     <>
+      <h2>watch whole form {wacthUserName}</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-control">
           <label htmlFor="username">username</label>
