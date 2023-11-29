@@ -12,6 +12,8 @@ type FormValues = {
   phNumbers: {
     number: string;
   }[];
+  age: number;
+  dob: Date;
 };
 
 const FormHandel = () => {
@@ -29,6 +31,8 @@ const FormHandel = () => {
       },
       phoneNumbers: ["", ""],
       phNumbers: [{ number: "" }],
+      age: 0,
+      dob: new Date(),
     },
   });
   const { register, control, handleSubmit, formState } = form;
@@ -232,6 +236,44 @@ const FormHandel = () => {
             </button>
           </div>
         </div>
+
+        {/* now add the age field  */}
+
+        <div className="form-control">
+          <label htmlFor="age">age</label>
+          <input
+            type="number"
+            id="age"
+            {...register("age", {
+              valueAsNumber: true,
+              required: {
+                value: true,
+                message: "age is required",
+              },
+            })}
+          />
+
+          <p className="error">{errors.age?.message}</p>
+        </div>
+
+        {/* now add the date of birth */}
+        <div className="form-control">
+          <label htmlFor="dob">dob</label>
+          <input
+            type="date"
+            id="dob"
+            {...register("dob", {
+              valueAsDate: true,
+              required: {
+                value: true,
+                message: "dob is required",
+              },
+            })}
+          />
+
+          <p className="error">{errors.dob?.message}</p>
+        </div>
+
         <button type="submit" className="btn-submit">
           submit
         </button>
