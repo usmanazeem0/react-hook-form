@@ -36,7 +36,7 @@ const FormHandel = () => {
       dob: new Date(),
     },
   });
-  const { register, control, handleSubmit, watch, formState } = form;
+  const { register, control, handleSubmit, watch, formState, getValues } = form;
   const { errors } = formState;
   // hereappend in a function that useFieldArray offers
   const { fields, append, remove } = useFieldArray({
@@ -84,6 +84,11 @@ const FormHandel = () => {
     });
     return () => subscription.unsubscribe();
   }, [watch]);
+
+  // get value function
+  const handleGetValues = () => {
+    console.log("get Values", getValues(["username", "channel"]));
+  };
 
   return (
     <>
@@ -299,6 +304,9 @@ const FormHandel = () => {
 
         <button type="submit" className="btn-submit">
           submit
+        </button>
+        <button type="button" onClick={handleGetValues}>
+          Get Values
         </button>
       </form>
 
