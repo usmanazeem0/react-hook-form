@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 type FormValues = {
   username: string;
@@ -9,6 +9,9 @@ type FormValues = {
     facebook: string;
   };
   phoneNumbers: string[];
+  phNumbers: {
+    number: string;
+  }[];
 };
 
 const FormHandel = () => {
@@ -25,10 +28,16 @@ const FormHandel = () => {
         facebook: "",
       },
       phoneNumbers: ["", ""],
+      phNumbers: [{ number: "" }],
     },
   });
   const { register, control, handleSubmit, formState } = form;
   const { errors } = formState;
+  // hereappend in a function that useFieldArray offers
+  const { fields, append, remove } = useFieldArray({
+    name: "phNumbers",
+    control,
+  });
   //   register is a method that can be accessed by form
 
   // after using it in the field {...register} now track the progress
@@ -185,10 +194,47 @@ const FormHandel = () => {
               },
             })}
           />
+          <p className="error">{errors.phoneNumbers?.message}</p>
         </div>
-        <p className="error">{errors.phoneNumbers?.message}</p>
 
-        <button type="submit">submit</button>
+        {/* add new lable to access the list of phonenumber array
+         */}
+        <div>
+          <label>List of phone numbers</label>
+          <div>
+            {fields.map((field, index) => {
+              return (
+                <div className="form-control" key={field.id}>
+                  <input
+                    type="text"
+                    {...register(`phNumbers.${index}.number` as const)}
+
+                    // now add a button for delete phone number
+                    // for this useFieldArray offers a remove function
+                  />
+                  {index > 0 && (
+                    <button
+                      className="btn-remove"
+                      type="button"
+                      onClick={() => remove(index)}
+                    >
+                      remove Number
+                    </button>
+                  )}
+                </div>
+              );
+            })}
+            {/* now add to button to add new phone number 
+            for this useFieldArray offers a function called append
+            this will be callled in fields object */}
+            <button type="button" onClick={() => append({ number: "" })}>
+              Add another number
+            </button>
+          </div>
+        </div>
+        <button type="submit" className="btn-submit">
+          submit
+        </button>
       </form>
 
       {/* now we will pass the props todevTool with the object(control) as value */}
